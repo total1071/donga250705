@@ -1,116 +1,39 @@
-<!DOCTYPE html>
-<html lang="ko">
-<head>
-  <meta charset="UTF-8">
-  <title>발주서 양식</title>
-  <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
-    th, td { border: 1px solid #aaa; padding: 8px; text-align: center; }
-    input[type="text"], input[type="number"] { width: 90%; padding: 4px; }
-    button { margin: 5px 4px; padding: 6px 12px; }
-    .input-row { margin-bottom: 10px; }
-    .label { font-weight: bold; margin-right: 10px; }
-    .right { text-align: right; }
-    .total-box { font-size: 1.2em; margin-top: 10px; }
-  </style>
-</head>
-<body>
-  <h2>📄 발주서</h2>
-
-  <div class="input-row">
-    <span class="label">수주처명:</span>
-    <input type="text" id="customerName" placeholder="예: 홍길동상사" />
-    <span class="label" style="margin-left: 30px;">발주처명:</span>
-    <input type="text" id="vendorName" placeholder="예: 나이스버디" />
-  </div>
-
-  <table id="orderTable">
-    <thead>
-      <tr>
-        <th>품목</th>
-        <th>수량</th>
-        <th>단가(₩)</th>
-        <th>합계(₩)</th>
-        <th>삭제</th>
-      </tr>
-    </thead>
-    <tbody id="orderBody">
-      <tr>
-        <td><input type="text" name="item" placeholder="예: 골프공" /></td>
-        <td><input type="number" name="qty" min="0" value="0" onchange="updateTotals()" /></td>
-        <td><input type="number" name="price" min="0" value="0" onchange="updateTotals()" /></td>
-        <td class="subtotal">0</td>
-        <td><button onclick="deleteRow(this)">삭제</button></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <button onclick="addRow()">+ 품목 추가</button>
-
-  <div class="total-box right">
-    <strong>최종 합계 금액:</strong> <span id="totalSum">₩0</span>
-  </div>
-
-  <div style="margin-top: 20px;">
-    <button onclick="window.print()">🖨️ 인쇄하기</button>
-    <button onclick="copyHTML()">📋 메일용 HTML 복사</button>
-  </div>
-
-  <script>
-    function updateTotals() {
-      const rows = document.querySelectorAll('#orderBody tr');
-      let total = 0;
-
-      rows.forEach(row => {
-        const qty = row.querySelector('input[name="qty"]').value;
-        const price = row.querySelector('input[name="price"]').value;
-        const subtotal = qty * price;
-        row.querySelector('.subtotal').innerText = subtotal.toLocaleString();
-        total += subtotal;
-      });
-
-      document.getElementById('totalSum').innerText = '₩' + total.toLocaleString();
-    }
-
-    function addRow() {
-      const table = document.getElementById('orderBody');
-      const newRow = document.createElement('tr');
-      newRow.innerHTML = `
-        <td><input type="text" name="item" placeholder="예: 골프공" /></td>
-        <td><input type="number" name="qty" min="0" value="0" onchange="updateTotals()" /></td>
-        <td><input type="number" name="price" min="0" value="0" onchange="updateTotals()" /></td>
-        <td class="subtotal">0</td>
-        <td><button onclick="deleteRow(this)">삭제</button></td>
-      `;
-      table.appendChild(newRow);
-    }
-
-    function deleteRow(btn) {
-      const row = btn.closest('tr');
-      row.remove();
-      updateTotals();
-    }
-
-    function copyHTML() {
-      const temp = document.createElement("textarea");
-      const customer = document.getElementById("customerName").value;
-      const vendor = document.getElementById("vendorName").value;
-      const table = document.getElementById("orderTable").outerHTML;
-      const total = document.getElementById("totalSum").innerText;
-      temp.value = `
-        <h3>발주서</h3>
-        <p><strong>수주처:</strong> ${customer}</p>
-        <p><strong>발주처:</strong> ${vendor}</p>
-        ${table}
-        <p><strong>최종 합계 금액:</strong> ${total}</p>
-      `;
-      document.body.appendChild(temp);
-      temp.select();
-      document.execCommand("copy");
-      document.body.removeChild(temp);
-      alert("메일용 HTML이 복사되었습니다. 이메일 본문에 붙여넣기하세요.");
-    }
-  </script>
-</body>
-</html>
+<style>
+  body { 
+    font-family: Arial, sans-serif; 
+    padding: 20px; 
+    color: green; /* 글자색 초록으로 설정 */
+  }
+  table { 
+    width: 100%; 
+    border-collapse: collapse; 
+    margin-bottom: 10px; 
+  }
+  th, td { 
+    border: 1px solid #aaa; 
+    padding: 8px; 
+    text-align: center; 
+  }
+  input[type="text"], input[type="number"] { 
+    width: 90%; 
+    padding: 4px; 
+  }
+  button { 
+    margin: 5px 4px; 
+    padding: 6px 12px; 
+  }
+  .input-row { 
+    margin-bottom: 10px; 
+  }
+  .label { 
+    font-weight: bold; 
+    margin-right: 10px; 
+  }
+  .right { 
+    text-align: right; 
+  }
+  .total-box { 
+    font-size: 1.2em; 
+    margin-top: 10px; 
+  }
+</style>
